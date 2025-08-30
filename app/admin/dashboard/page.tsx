@@ -4,7 +4,7 @@ import { AdminNav } from "@/components/admin/admin-nav"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function AdminDashboardPage() {
-  const supabase = await createClient()
+  const supabase = createClient()
 
   const { data: user, error } = await supabase.auth.getUser()
   if (error || !user?.user) {
@@ -23,13 +23,22 @@ export default async function AdminDashboardPage() {
   }
 
   // Get dashboard stats
-  const [{ count: productsCount }, { count: categoriesCount }, { count: ordersCount }, { count: usersCount }] =
-    await Promise.all([
-      supabase.from("products").select("*", { count: "exact", head: true }),
-      supabase.from("categories").select("*", { count: "exact", head: true }),
-      supabase.from("orders").select("*", { count: "exact", head: true }),
-      supabase.from("profiles").select("*", { count: "exact", head: true }),
-    ])
+  const [
+    productsRes,
+    categoriesRes,
+    ordersRes,
+    usersRes
+  ] = await Promise.all([
+    supabase.from("products").select("*", { count: "exact", head: true }),
+    supabase.from("categories").select("*", { count: "exact", head: true }),
+    supabase.from("orders").select("*", { count: "exact", head: true }),
+    supabase.from("profiles").select("*", { count: "exact", head: true }),
+  ])
+
+  const productsCount = productsRes.count ?? 0
+  const categoriesCount = categoriesRes.count ?? 0
+  const ordersCount = ordersRes.count ?? 0
+  const usersCount = usersRes.count ?? 0
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,7 +55,7 @@ export default async function AdminDashboardPage() {
               <CardTitle className="text-sm font-medium">Total Products</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{productsCount || 0}</div>
+              <div className="text-2xl font-bold">{productsCount}</div>
             </CardContent>
           </Card>
 
@@ -55,7 +64,7 @@ export default async function AdminDashboardPage() {
               <CardTitle className="text-sm font-medium">Categories</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{categoriesCount || 0}</div>
+              <div className="text-2xl font-bold">{categoriesCount}</div>
             </CardContent>
           </Card>
 
@@ -64,7 +73,7 @@ export default async function AdminDashboardPage() {
               <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{ordersCount || 0}</div>
+              <div className="text-2xl font-bold">{ordersCount}</div>
             </CardContent>
           </Card>
 
@@ -73,7 +82,7 @@ export default async function AdminDashboardPage() {
               <CardTitle className="text-sm font-medium">Registered Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{usersCount || 0}</div>
+              <div className="text-2xl font-bold">{usersCount}</div>
             </CardContent>
           </Card>
         </div>

@@ -5,11 +5,19 @@ import { StoreHeader } from "@/components/store/store-header"
 import { createClient } from "@/lib/supabase/server"
 import { ProductCard } from "@/components/store/product-card"
 
-export default async function HomePage() {
-  const supabase = await createClient()
+type Category = {
+  name: string
+}
+type Product = {
+  id: string
+  [key: string]: any
+  categories?: Category[]
+}
 
-  // Get featured products (latest 8 products)
-  const { data: featuredProducts } = await supabase
+export default async function HomePage() {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
     .from("products")
     .select(`
       *,
@@ -20,6 +28,8 @@ export default async function HomePage() {
     .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(8)
+
+  const featuredProducts: Product[] = data ?? []
 
   return (
     <div className="min-h-screen bg-background">
@@ -35,11 +45,11 @@ export default async function HomePage() {
         </div>
 
         {/* Featured Products */}
-        {featuredProducts && featuredProducts.length > 0 && (
+        {featuredProducts.length > 0 && (
           <section className="mb-16">
             <h3 className="text-2xl font-bold mb-6">Featured Products</h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {featuredProducts.map((product) => (
+              {featuredProducts.map((product: Product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
