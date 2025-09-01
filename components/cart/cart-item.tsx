@@ -27,7 +27,7 @@ interface CartItemProps {
 }
 
 export function CartItem({ item }: CartItemProps) {
-  const [quantity, setQuantity] = useState(item.quantity)
+  const [quantity, setQuantity] = useState<number>(item.quantity)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isRemoving, setIsRemoving] = useState(false)
   const router = useRouter()
@@ -39,7 +39,10 @@ export function CartItem({ item }: CartItemProps) {
     setIsUpdating(true)
 
     try {
-      const { error } = await supabase.from("cart_items").update({ quantity: newQuantity }).eq("id", item.id)
+      const { error } = await supabase
+        .from("cart_items")
+        .update({ quantity: newQuantity })
+        .eq("id", item.id)
 
       if (error) throw error
 
@@ -57,20 +60,28 @@ export function CartItem({ item }: CartItemProps) {
     setIsRemoving(true)
 
     try {
-      const { error } = await supabase.from("cart_items").delete().eq("id", item.id)
+      const { error } = await supabase
+        .from("cart_items")
+        .delete()
+        .eq("id", item.id)
 
       if (error) throw error
 
       router.refresh()
     } catch (error) {
       console.error("Error removing item:", error)
+    } finally {
       setIsRemoving(false)
     }
   }
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuantity = Number.parseInt(e.target.value)
-    if (newQuantity >= 1 && newQuantity <= item.products.stock_quantity) {
+    if (
+      !isNaN(newQuantity) &&
+      newQuantity >= 1 &&
+      newQuantity <= item.products.stock_quantity
+    ) {
       updateQuantity(newQuantity)
     }
   }
@@ -83,10 +94,12 @@ export function CartItem({ item }: CartItemProps) {
           <div className="w-24 h-24 relative overflow-hidden rounded-lg flex-shrink-0">
             {item.products.image_url ? (
               <Image
-                src={item.products.image_url || "/placeholder.svg"}
+                src={item.products.image_url}
                 alt={item.products.name}
                 fill
                 className="object-cover"
+                sizes="96px"
+                priority
               />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
@@ -107,6 +120,8 @@ export function CartItem({ item }: CartItemProps) {
                 onClick={removeItem}
                 disabled={isRemoving}
                 className="text-destructive hover:text-destructive"
+                type="button"
+                aria-label="Remove item"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -119,18 +134,21 @@ export function CartItem({ item }: CartItemProps) {
                   size="sm"
                   onClick={() => updateQuantity(quantity - 1)}
                   disabled={quantity <= 1 || isUpdating}
+                  type="button"
+                  aria-label="Decrease quantity"
                 >
                   <Minus className="h-3 w-3" />
                 </Button>
 
                 <Input
                   type="number"
-                  min="1"
+                  min={1}
                   max={item.products.stock_quantity}
                   value={quantity}
                   onChange={handleQuantityChange}
                   disabled={isUpdating}
                   className="w-16 text-center"
+                  aria-label="Quantity"
                 />
 
                 <Button
@@ -138,16 +156,24 @@ export function CartItem({ item }: CartItemProps) {
                   size="sm"
                   onClick={() => updateQuantity(quantity + 1)}
                   disabled={quantity >= item.products.stock_quantity || isUpdating}
+                  type="button"
+                  aria-label="Increase quantity"
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
 
-                <span className="text-sm text-muted-foreground ml-2">{item.products.stock_quantity} available</span>
+                <span className="text-sm text-muted-foreground ml-2">
+                  {item.products.stock_quantity} available
+                </span>
               </div>
 
               <div className="text-right">
-                <div className="font-semibold">${(item.products.price * quantity).toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">${item.products.price} each</div>
+                <div className="font-semibold">
+                  ${Number(item.products.price * quantity).toFixed(2)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  ${Number(item.products.price).toFixed(2)} each
+                </div>
               </div>
             </div>
           </div>
