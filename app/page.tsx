@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/store/product-card"
 type Category = {
   name: string
 }
+
 type Product = {
   id: string
   [key: string]: any
@@ -29,7 +30,8 @@ export default async function HomePage() {
     .order("created_at", { ascending: false })
     .limit(8)
 
-  const featuredProducts: Product[] = data ?? []
+  // Ensure featuredProducts is always an array
+  const featuredProducts: Product[] = Array.isArray(data) ? data : []
 
   return (
     <div className="min-h-screen bg-background">
