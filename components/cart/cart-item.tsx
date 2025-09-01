@@ -86,6 +86,8 @@ export function CartItem({ item }: CartItemProps) {
     }
   }
 
+  if (!item.products) return null
+
   return (
     <Card>
       <CardContent className="p-6">
