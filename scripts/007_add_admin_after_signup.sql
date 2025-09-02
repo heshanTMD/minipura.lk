@@ -7,26 +7,26 @@
 -- Step 2: After successful signup and email verification, run this script
 -- to grant admin privileges to the user
 
--- Find the user by email and add them to admin_users
+-- Grant admin privileges to a user after signup and email verification
+
+-- Insert or update the user as an admin
 INSERT INTO public.admin_users (id, role, created_at)
 SELECT 
-    au.id,
+    u.id,
     'admin',
     NOW()
-FROM auth.users au
--- Updated email in WHERE clause
-WHERE au.email = 'bishanpankaja@icloud.com'
+FROM auth.users u
+WHERE u.email = 'bishanpankaja@icloud.com'
 ON CONFLICT (id) DO UPDATE SET
     role = EXCLUDED.role,
     created_at = EXCLUDED.created_at;
 
--- Verify the admin was added
+-- Verify the admin assignment
 SELECT 
-    au.email,
-    au.created_at as user_created,
-    admin.role,
-    admin.created_at as admin_created
-FROM auth.users au
-JOIN public.admin_users admin ON au.id = admin.id
--- Updated email in verification query
-WHERE au.email = 'bishanpankaja@icloud.com';
+    u.email,
+    u.created_at AS user_created,
+    a.role,
+    a.created_at AS admin_created
+FROM auth.users u
+JOIN public.admin_users a ON u.id = a.id
+WHERE u.email = 'bishanpankaja@icloud.com';
