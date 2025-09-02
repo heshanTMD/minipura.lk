@@ -16,7 +16,7 @@ interface CartItemProps {
   item: {
     id: string
     quantity: number
-    products: {
+      products: {
       id: string
       name: string
       price: number
