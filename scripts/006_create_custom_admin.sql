@@ -13,14 +13,15 @@ BEGIN
   SELECT id INTO user_uuid 
   FROM auth.users 
   WHERE email = user_email;
-  
-  -- If user exists, add them to admin_users
+
+  -- If user exists, add or update them in admin_users
   IF user_uuid IS NOT NULL THEN
     INSERT INTO public.admin_users (id, role, created_at)
     VALUES (user_uuid, 'admin', NOW())
     ON CONFLICT (id) DO UPDATE SET
-      role = EXCLUDED.role;
-    
+      role = EXCLUDED.role,
+      created_at = EXCLUDED.created_at;
+
     RAISE NOTICE 'Admin privileges granted to user: %', user_email;
   ELSE
     RAISE NOTICE 'User not found: %', user_email;
