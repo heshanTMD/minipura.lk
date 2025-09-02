@@ -1,80 +1,85 @@
 # Ecommerce Frontend
 
-This project is an ecommerce frontend application built with React and TypeScript. It provides a user-friendly interface for browsing products, managing a shopping cart, and completing purchases.
+A modern ecommerce frontend built with **React** and **TypeScript**.  
+This app lets users browse products, view details, manage their cart, and complete purchases with a clean, responsive UI.
 
-## Features
+## ✨ Features
 
-- **Product Listing**: Displays a list of products with details such as images, titles, and prices.
-- **Product Details**: View detailed information about a specific product.
-- **Shopping Cart**: Manage items in the cart, view total prices, and proceed to checkout.
-- **User Profile**: View and manage user information and order history.
-- **Responsive Design**: The application is designed to be responsive and works well on various screen sizes.
+- **Product Listing**: Browse all products with images, titles, and prices.
+- **Product Details**: View detailed info for each product.
+- **Shopping Cart**: Add, remove, and update items in your cart.
+- **Checkout**: Simple checkout flow.
+- **User Profile**: Manage your profile and view order history.
+- **Responsive Design**: Works great on desktop and mobile.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 ecommerce-frontend
-├── public
+├── public/
 │   └── favicon.ico
-├── src
-│   ├── components
-│   │   ├── common
+├── src/
+│   ├── components/
+│   │   ├── common/
 │   │   │   └── Navbar.tsx
-│   │   ├── product
+│   │   ├── product/
 │   │   │   ├── ProductCard.tsx
 │   │   │   └── ProductList.tsx
-│   │   ├── cart
+│   │   ├── cart/
 │   │   │   └── CartSidebar.tsx
-│   │   └── footer
+│   │   └── footer/
 │   │       └── Footer.tsx
-│   ├── pages
+│   ├── pages/
 │   │   ├── index.tsx
-│   │   ├── product
+│   │   ├── product/
 │   │   │   └── [id].tsx
 │   │   ├── cart.tsx
 │   │   ├── checkout.tsx
 │   │   └── profile.tsx
-│   ├── styles
+│   ├── styles/
 │   │   └── globals.css
-│   ├── utils
+│   ├── utils/
 │   │   └── api.ts
-│   └── types
+│   └── types/
 │       └── index.ts
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-## Installation
+## 🚀 Getting Started
 
-1. Clone the repository:
-   ```
+1. **Clone the repository**
+   ```sh
    git clone <repository-url>
    ```
 
-2. Navigate to the project directory:
-   ```
+2. **Navigate to the project directory**
+   ```sh
    cd ecommerce-frontend
    ```
 
-3. Install the dependencies:
-   ```
+3. **Install dependencies**
+   ```sh
    npm install
+   # or
+   pnpm install
    ```
 
-## Usage
+4. **Start the development server**
+   ```sh
+   npm run dev
+   # or
+   pnpm dev
+   ```
 
-To start the development server, run:
-```
-npm start
-```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Open your browser and navigate to `http://localhost:3000` to view the application.
+## 🤝 Contributing
 
-## Contributing
+Contributions are welcome!  
+Feel free to open issues or submit pull requests for improvements and bug fixes.
 
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
-
-## License
+## 📄 License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
