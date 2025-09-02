@@ -4,15 +4,23 @@ import { getProductById } from "@/utils/api";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/footer/Footer";
 
+type Product = {
+  id: string;
+  title: string;
+  image: string;
+  price: number;
+  description: string;
+};
+
 const ProductPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === "string") {
       const fetchProduct = async () => {
         try {
           const data = await getProductById(id);
