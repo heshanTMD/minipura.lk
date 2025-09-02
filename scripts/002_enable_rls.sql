@@ -38,7 +38,9 @@ CREATE POLICY "Only admins can delete categories" ON public.categories
 
 -- Products policies (public read, admin write)
 CREATE POLICY "Anyone can view active products" ON public.products
-  FOR SELECT USING (is_active = true OR EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid()));
+  FOR SELECT USING (
+    is_active = true OR EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid())
+  );
 
 CREATE POLICY "Only admins can insert products" ON public.products
   FOR INSERT WITH CHECK (
@@ -57,7 +59,9 @@ CREATE POLICY "Only admins can delete products" ON public.products
 
 -- Orders policies
 CREATE POLICY "Users can view their own orders" ON public.orders
-  FOR SELECT USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid()));
+  FOR SELECT USING (
+    auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid())
+  );
 
 CREATE POLICY "Users can insert their own orders" ON public.orders
   FOR INSERT WITH CHECK (auth.uid() = user_id);
@@ -70,8 +74,8 @@ CREATE POLICY "Only admins can update orders" ON public.orders
 -- Order items policies
 CREATE POLICY "Users can view their own order items" ON public.order_items
   FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND user_id = auth.uid()) OR
-    EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid())
+    EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND user_id = auth.uid())
+    OR EXISTS (SELECT 1 FROM public.admin_users WHERE id = auth.uid())
   );
 
 CREATE POLICY "Users can insert their own order items" ON public.order_items
